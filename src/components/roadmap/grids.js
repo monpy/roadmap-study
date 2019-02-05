@@ -26,7 +26,6 @@ const GridsContainer = styled.ul`
 const Grids = ({ dateRange }) => {
   const states = useContext(Store);
   const milestonesState = states.milestones;
-
   const milestones = milestonesState.state.concat();
 
   const grids = dateRange.map((date, i) => {

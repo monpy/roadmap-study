@@ -2,7 +2,10 @@ import React from "react";
 import { getDatesFromRange, getDateFromToday } from "../../lib/date";
 import styled, { css } from "styled-components";
 
+import Tasks from "./tasks";
 import Grids from "./grids";
+
+import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
 
 const Container = styled.div`
   position: fixed;
@@ -16,6 +19,8 @@ const Container = styled.div`
   height: 100%;
 
   & > aside {
+    overflow: auto;
+    width: 100%;
     height: 100%;
   }
 `;
@@ -31,9 +36,16 @@ const Table = props => {
 
   return (
     <Container>
-      <aside>
-        <Grids dateRange={dateRange} />
-      </aside>
+      <ScrollSync>
+        <aside>
+          <ScrollSyncPane>
+            <Grids dateRange={dateRange} />
+          </ScrollSyncPane>
+          <ScrollSyncPane>
+            <Tasks dateRange={dateRange} />
+          </ScrollSyncPane>
+        </aside>
+      </ScrollSync>
     </Container>
   );
 };
