@@ -3,12 +3,16 @@ import React from "react";
 import Header from "./header";
 import Table from "./table";
 
+import { Provider } from "../../states/project/";
+
 const Roadmap = props => {
   return (
-    <div>
-      <Header />
-      <Table />
-    </div>
+    <Provider>
+      <div>
+        <Header />
+        <Table />
+      </div>
+    </Provider>
   );
 };
 
