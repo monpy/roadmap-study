@@ -15,6 +15,7 @@
     "re-resizable": "^4.11.0",
     "react": "^16.8.0-alpha.1",
     "react-dom": "^16.8.0-alpha.1",
+    "react-draggable": "^3.1.1",
     "react-scroll-sync": "^0.7.0",
     "redux-logger": "^3.0.6",
     "redux-zero": "^4.15.2",

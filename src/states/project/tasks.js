@@ -15,12 +15,13 @@ export const reducer = (state = [{}], action) => {
 };
 
 const updateTask = (state, { id, value }) => {
-  return state.map(task => {
+  const nextState = state.map(task => {
     if (task.id === id) {
       return Object.assign({}, task, value);
     }
     return task;
   });
+  return nextState;
 };
 
 const createTask = (state, action) => {

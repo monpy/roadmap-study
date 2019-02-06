@@ -4,6 +4,7 @@ import { Provider, Store } from "../../states/project";
 import moment from "moment";
 import Avatar from "./avatar";
 import ResizableContainer from "./task-resizable-container.js";
+import DraggableContainer from "./task-draggable-container.js";
 
 const TasksContainer = styled.div`
   box-sizing: border-box;
@@ -59,7 +60,18 @@ const Tasks = ({ dateRange }) => {
                 dispatch({
                   type: "update",
                   id: id,
-                  value: calcNextTaskState(newXIndex, period, dateRange, task)
+                  value: calcNextTaskStateByResize(newXIndex, period, dateRange)
+                });
+              }}
+              onDragged={({ relativeMovedX, relativeMovedY }) => {
+                dispatch({
+                  type: "update",
+                  id: id,
+                  value: calcNextTaskStateByDrag(
+                    startIndex + relativeMovedX,
+                    position + relativeMovedY,
+                    dateRange
+                  )
                 });
               }}
             />
@@ -70,7 +82,17 @@ const Tasks = ({ dateRange }) => {
   );
 };
 
-const calcNextTaskState = (newXIndex, period, dateRange, task) => {
+const calcNextTaskStateByDrag = (newXIndex, newPosition, dateRange, task) => {
+  const x = Math.max(newXIndex, 0);
+  const position = Math.max(newPosition, 0);
+  console.log(x, position);
+  return {
+    startAt: dateRange[x],
+    position: position
+  };
+};
+
+const calcNextTaskStateByResize = (newXIndex, period, dateRange, task) => {
   return {
     startAt: dateRange[newXIndex],
     endAt: dateRange[newXIndex + period]
@@ -118,25 +140,33 @@ const Task = ({
   isFinished,
   asignee,
   title,
-  onResized
+  onResized,
+  onDragged
 }) => {
   const diff = moment(endAt).diff(startAt, "day");
   return (
-    <ResizableContainer
-      onResized={onResized}
+    <DraggableContainer
+      onDragged={onDragged}
       xIndex={startIndex}
       yIndex={rowIndex}
       period={diff}
     >
-      <TaskContainer>
-        <TaskInner>
-          <Wrap style={{ paddingLeft: 8, overflow: "hidden" }}>
-            <Avatar />
-            <Title>{title}</Title>
-          </Wrap>
-        </TaskInner>
-      </TaskContainer>
-    </ResizableContainer>
+      <ResizableContainer
+        onResized={onResized}
+        xIndex={startIndex}
+        yIndex={rowIndex}
+        period={diff}
+      >
+        <TaskContainer>
+          <TaskInner>
+            <Wrap style={{ paddingLeft: 8, overflow: "hidden" }}>
+              <Avatar />
+              <Title>{title}</Title>
+            </Wrap>
+          </TaskInner>
+        </TaskContainer>
+      </ResizableContainer>
+    </DraggableContainer>
   );
 };
 

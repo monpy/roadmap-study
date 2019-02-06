@@ -13,10 +13,10 @@ const ResizableContaienr = ({
   onResized,
   children
 }) => {
-  const [_xIndex, updateXIndex] = useState(xIndex);
-  const defaultXIndex = xIndex;
-
-  useEffect(() => {});
+  const [_xIndex, updateXIndex] = useState(0);
+  useEffect(() => {
+    updateXIndex(0);
+  }, [xIndex]);
 
   return (
     <Resizable
@@ -40,8 +40,8 @@ const ResizableContaienr = ({
         position: "absolute",
         top: 0,
         left: 0,
-        transform: `translate(${_xIndex * COLUMN_WIDTH}px, ${ROW_HEIGHT *
-          yIndex}px)`
+        zIndex: 0,
+        transform: `translate(${_xIndex * COLUMN_WIDTH}px, 0)`
       }}
       handleStyles={{
         left: {
@@ -56,16 +56,18 @@ const ResizableContaienr = ({
         }
       }}
       onResizeStart={(e, dir, el, d) => {
+        e.stopPropagation();
         handleResizeStart(e, dir, el, d);
       }}
       onResizeStop={(e, dir, el, d) => {
+        e.stopPropagation();
         handleResizeStop(e, dir, el);
         const newPeriod = period + d.width / COLUMN_WIDTH;
         if (newPeriod < 0) return;
-
-        onResized(_xIndex, newPeriod);
+        onResized(xIndex + _xIndex, newPeriod);
       }}
       onResize={(e, dir, el, d) => {
+        e.stopPropagation();
         handleResize(e, dir, el, d, _xIndex, xIndex, updateXIndex);
       }}
     >
@@ -79,7 +81,7 @@ const handleResizeStop = (e, dir, el, d) => {};
 
 const handleResize = (e, dir, el, d, _xIndex, xIndex, updateXIndex) => {
   if (dir === "left") {
-    const updated = xIndex - d.width / 30;
+    const updated = -d.width / 30;
     if (updated != _xIndex) updateXIndex(updated);
   }
 };
