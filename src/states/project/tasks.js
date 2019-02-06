@@ -6,9 +6,21 @@ export const reducer = (state = [{}], action) => {
     case "create":
       return createTask(state, action);
 
+    case "update":
+      return updateTask(state, action);
+
     default:
       return state;
   }
+};
+
+const updateTask = (state, { id, value }) => {
+  return state.map(task => {
+    if (task.id === id) {
+      return Object.assign({}, task, value);
+    }
+    return task;
+  });
 };
 
 const createTask = (state, action) => {
