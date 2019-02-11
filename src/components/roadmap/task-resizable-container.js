@@ -43,12 +43,12 @@ const ResizableContaienr = ({
       }}
       handleStyles={{
         left: {
-          width: 20,
+          width: 10,
           left: 0,
           zIndex: 1
         },
         right: {
-          width: 20,
+          width: 10,
           right: 0,
           zIndex: 1
         }

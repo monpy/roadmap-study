@@ -57,13 +57,10 @@ const DraggableContainer = ({ xIndex, yIndex, onDragged, children }) => {
   );
 };
 
-const transformSnappedIndexValue = (diffX, diffY, baseWidth, baseHeight) => {
-  const states = useContext(Store);
-  const range = states.range;
-
+const transformSnappedIndexValue = (diffX, diffY, columnWidth, rowHeight) => {
   return {
-    relativeMovedX: Math.round(-diffX / baseWidth),
-    relativeMovedY: Math.round(-diffY / baseHeight)
+    relativeMovedX: Math.round(-diffX / columnWidth),
+    relativeMovedY: Math.round(-diffY / rowHeight)
   };
 };
 

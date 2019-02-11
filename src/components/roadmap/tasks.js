@@ -67,12 +67,17 @@ const Tasks = ({ dateRange }) => {
         <TaskCreater
           xIndex={mousePoint.xIndex}
           yIndex={mousePoint.yIndex}
-          onCreate={({ xIndex, period }) => {
-            console.log(xIndex, period);
-            // dispatch({
-            //   type: "create",
-            //   value: value
-            // });
+          onCreate={({ xIndex, period, yIndex }) => {
+            dispatch({
+              type: "create",
+              value: {
+                startAt: dateRange[xIndex],
+                endAt: dateRange[xIndex + period],
+                position: yIndex,
+                isFinished: false,
+                title: "new task created!"
+              }
+            });
           }}
         />
         {tasks.map((task, i) => {

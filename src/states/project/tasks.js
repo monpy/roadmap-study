@@ -24,8 +24,8 @@ const updateTask = (state, { id, value }) => {
   return nextState;
 };
 
-const createTask = (state, action) => {
-  return state;
+const createTask = (state, { value }) => {
+  return state.concat(Object.assign({}, {id:  uuidv4()}, value));
 };
 
 export const initialState = [

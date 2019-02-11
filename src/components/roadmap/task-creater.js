@@ -94,7 +94,7 @@ const TaskCreater = ({ xIndex, yIndex, onCreate = () => {} }) => {
       onResizeStop={(e, dir, el, d) => {
         e.stopPropagation();
         const period = d.width / range.state.columnWidth;
-        onCreate({ xIndex: startPosition.xIndex, period: period });
+        onCreate({ xIndex: startPosition.xIndex - slideLeft, period: period, yIndex: startPosition.yIndex });
         updateCreating(false);
         updatePeriod(1);
         updateSlideLeft(0);
