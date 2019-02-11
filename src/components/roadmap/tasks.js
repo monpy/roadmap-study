@@ -1,6 +1,6 @@
-import React, { useContext, useState } from "react";
-import styled, { css } from "styled-components";
-import { Provider, Store } from "../../states/project";
+import React, { useContext, useState, useRef } from "react";
+import styled from "styled-components";
+import { Store } from "../../states/project";
 import moment from "moment";
 import Avatar from "./avatar";
 import ResizableContainer from "./task-resizable-container.js";
@@ -41,6 +41,7 @@ const calcIndexFromMousePosition = (x, y, columnWidth, rowHeight) => {
 };
 
 const Tasks = ({ dateRange }) => {
+  const containerEl = useRef(null);
   const states = useContext(Store);
   const tasksState = states.tasks;
   const tasks = tasksState.state.concat();
@@ -51,12 +52,12 @@ const Tasks = ({ dateRange }) => {
   const range = states.range;
 
   return (
-    <TasksContainer>
+    <TasksContainer ref={containerEl}>
       <TasksInner
         style={{ width: dateRange.length * range.state.columnWidth }}
         onMouseMove={e => {
           const currentMousePoint = calcIndexFromMousePosition(
-            e.clientX,
+            e.clientX + containerEl.current.scrollLeft,
             e.clientY - 110,
             range.state.columnWidth,
             range.state.rowHeight

@@ -10,7 +10,6 @@ const CreaterContainer = styled(Resizable)`
   left: 0;
   padding: 6px 8px;
   cursor: crosshair;
-  z-index: 0;
 `;
 
 const Inner = styled.div`
@@ -44,7 +43,8 @@ const TaskCreater = ({ xIndex, yIndex, onCreate = () => {} }) => {
   return (
     <CreaterContainer
       style={{
-        transform: cssTranslate
+        transform: cssTranslate,
+        zIndex: creating ? 10 : 0
       }}
       minWidth={range.state.columnWidth}
       defaultSize={{
