@@ -33,15 +33,29 @@ const TaskContainer = styled.div`
   padding: 6px 8px;
 `;
 
+const handleMouseMove = e => {
+  console.log(e.clientX, e.clientY);
+  console.log(e.clientY);
+};
+
+const calcIndexFromMousePosition = e => {
+  const x = e.clientX / COLUMN_WIDTH;
+};
+
 const Tasks = ({ dateRange }) => {
   const states = useContext(Store);
   const tasksState = states.tasks;
   const tasks = tasksState.state.concat();
   const dispatch = tasksState.dispatch;
 
+  const range = states.range;
+
   return (
     <TasksContainer>
-      <TasksInner style={{ width: dateRange.length * 30 }}>
+      <TasksInner
+        style={{ width: dateRange.length * range.state.columnWidth }}
+        onMouseMove={handleMouseMove}
+      >
         {tasks.map((task, i) => {
           const { id, endAt, position, startAt, title, isFinished } = task;
           const startIndex = dateRange.findIndex(date => {
@@ -77,6 +91,7 @@ const Tasks = ({ dateRange }) => {
             />
           );
         })}
+        <TaskCreater />
       </TasksInner>
     </TasksContainer>
   );
@@ -85,7 +100,6 @@ const Tasks = ({ dateRange }) => {
 const calcNextTaskStateByDrag = (newXIndex, newPosition, dateRange, task) => {
   const x = Math.max(newXIndex, 0);
   const position = Math.max(newPosition, 0);
-  console.log(x, position);
   return {
     startAt: dateRange[x],
     position: position
@@ -170,6 +184,14 @@ const Task = ({
   );
 };
 
-const calcTaskPosition = currentRange => {};
+const CreaterContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+`;
+
+const TaskCreater = () => {
+  return <CreaterContainer />;
+};
 
 export default Tasks;

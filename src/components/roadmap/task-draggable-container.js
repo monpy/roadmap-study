@@ -1,10 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import styled, { css } from "styled-components";
-import moment from "moment";
+import { Store } from "../../states/project";
 import Draggable from "react-draggable";
-
-const ROW_HEIGHT = 47;
-const COLUMN_WIDTH = 30;
 
 const Handle = styled.div`
   position: absolute;
@@ -16,6 +13,9 @@ const Handle = styled.div`
 `;
 
 const DraggableContainer = ({ xIndex, yIndex, onDragged, children }) => {
+  const states = useContext(Store);
+  const range = states.range;
+
   const [dragging, updateDragging] = useState(false);
   const [_x, updateX] = useState(0);
   const [_y, updateY] = useState(0);
@@ -23,10 +23,10 @@ const DraggableContainer = ({ xIndex, yIndex, onDragged, children }) => {
   return (
     <Draggable
       position={{
-        x: xIndex * COLUMN_WIDTH,
-        y: yIndex * ROW_HEIGHT
+        x: xIndex * range.state.columnWidth,
+        y: yIndex * range.state.rowHeight
       }}
-      grid={[COLUMN_WIDTH, ROW_HEIGHT]}
+      grid={[range.state.columnWidth, range.state.rowHeight]}
       onStart={(e, data) => {
         updateX(data.x);
         updateY(data.y);
@@ -39,7 +39,12 @@ const DraggableContainer = ({ xIndex, yIndex, onDragged, children }) => {
       onStop={(e, data) => {
         const diffX = _x - data.x;
         const diffY = _y - data.y;
-        const snappedIndex = transformSnappedIndexValue(diffX, diffY);
+        const snappedIndex = transformSnappedIndexValue(
+          diffX,
+          diffY,
+          range.state.columnWidth,
+          range.state.rowHeight
+        );
         updateDragging(false);
         onDragged(snappedIndex);
       }}
@@ -52,10 +57,13 @@ const DraggableContainer = ({ xIndex, yIndex, onDragged, children }) => {
   );
 };
 
-const transformSnappedIndexValue = (diffX, diffY) => {
+const transformSnappedIndexValue = (diffX, diffY, baseWidth, baseHeight) => {
+  const states = useContext(Store);
+  const range = states.range;
+
   return {
-    relativeMovedX: Math.round(-diffX / COLUMN_WIDTH),
-    relativeMovedY: Math.round(-diffY / ROW_HEIGHT)
+    relativeMovedX: Math.round(-diffX / baseWidth),
+    relativeMovedY: Math.round(-diffY / baseHeight)
   };
 };
 

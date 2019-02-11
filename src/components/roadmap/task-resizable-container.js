@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import styled, { css } from "styled-components";
-import moment from "moment";
+import { Store } from "../../states/project";
 import Resizable from "re-resizable";
 
 const ROW_HEIGHT = 47;
@@ -13,6 +12,8 @@ const ResizableContaienr = ({
   onResized,
   children
 }) => {
+  const states = useContext(Store);
+  const range = states.range;
   const [_xIndex, updateXIndex] = useState(0);
   useEffect(() => {
     updateXIndex(0);
@@ -21,11 +22,11 @@ const ResizableContaienr = ({
   return (
     <Resizable
       defaultSize={{
-        width: (period + 1) * COLUMN_WIDTH,
-        height: ROW_HEIGHT
+        width: (period + 1) * range.state.columnWidth,
+        height: range.state.rowHeight
       }}
-      grid={[COLUMN_WIDTH, 1]}
-      minWidth={COLUMN_WIDTH}
+      grid={[range.state.columnWidth, 1]}
+      minWidth={range.state.columnWidth}
       enable={{
         top: false,
         right: true,
@@ -41,7 +42,7 @@ const ResizableContaienr = ({
         top: 0,
         left: 0,
         zIndex: 0,
-        transform: `translate(${_xIndex * COLUMN_WIDTH}px, 0)`
+        transform: `translate(${_xIndex * range.state.columnWidth}px, 0)`
       }}
       handleStyles={{
         left: {
@@ -62,13 +63,21 @@ const ResizableContaienr = ({
       onResizeStop={(e, dir, el, d) => {
         e.stopPropagation();
         handleResizeStop(e, dir, el);
-        const newPeriod = period + d.width / COLUMN_WIDTH;
+        const newPeriod = period + d.width / range.state.columnWidth;
         if (newPeriod < 0) return;
         onResized(xIndex + _xIndex, newPeriod);
       }}
       onResize={(e, dir, el, d) => {
         e.stopPropagation();
-        handleResize(e, dir, el, d, _xIndex, xIndex, updateXIndex);
+        handleResize(
+          e,
+          dir,
+          el,
+          d,
+          _xIndex,
+          updateXIndex,
+          range.state.columnWidth
+        );
       }}
     >
       {children}
@@ -79,9 +88,9 @@ const ResizableContaienr = ({
 const handleResizeStart = (e, dir, el, d) => {};
 const handleResizeStop = (e, dir, el, d) => {};
 
-const handleResize = (e, dir, el, d, _xIndex, xIndex, updateXIndex) => {
+const handleResize = (e, dir, el, d, _xIndex, updateXIndex, columnWidth) => {
   if (dir === "left") {
-    const updated = -d.width / 30;
+    const updated = -d.width / columnWidth;
     if (updated != _xIndex) updateXIndex(updated);
   }
 };

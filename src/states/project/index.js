@@ -1,6 +1,7 @@
 import React, { useReducer } from "react";
 import * as milestones from "./milestones";
 import * as tasks from "./tasks";
+import * as range from "./range";
 
 const Store = React.createContext();
 
@@ -11,7 +12,7 @@ const Provider = ({ children }) => {
   );
 
   const tasksState = useReducer(tasks.reducer, tasks.initialState);
-
+  const rangeState = useReducer(range.reducer, range.initialState);
   const provideValues = {
     milestones: {
       state: milestonesState[0],
@@ -20,6 +21,10 @@ const Provider = ({ children }) => {
     tasks: {
       state: tasksState[0],
       dispatch: tasksState[1]
+    },
+    range: {
+      state: rangeState[0],
+      dispatch: rangeState[1]
     }
   };
   return <Store.Provider value={provideValues}>{children}</Store.Provider>;
