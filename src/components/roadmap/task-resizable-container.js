@@ -2,9 +2,6 @@ import React, { useContext, useState, useEffect } from "react";
 import { Store } from "../../states/project";
 import Resizable from "re-resizable";
 
-const ROW_HEIGHT = 47;
-const COLUMN_WIDTH = 30;
-
 const ResizableContaienr = ({
   xIndex,
   yIndex,

@@ -1,10 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import styled, { css } from "styled-components";
 import { Provider, Store } from "../../states/project";
 import moment from "moment";
 import Avatar from "./avatar";
 import ResizableContainer from "./task-resizable-container.js";
 import DraggableContainer from "./task-draggable-container.js";
+import TaskCreater from "./task-creater";
 
 const TasksContainer = styled.div`
   box-sizing: border-box;
@@ -33,13 +34,10 @@ const TaskContainer = styled.div`
   padding: 6px 8px;
 `;
 
-const handleMouseMove = e => {
-  console.log(e.clientX, e.clientY);
-  console.log(e.clientY);
-};
-
-const calcIndexFromMousePosition = e => {
-  const x = e.clientX / COLUMN_WIDTH;
+const calcIndexFromMousePosition = (x, y, columnWidth, rowHeight) => {
+  const xIndex = Math.floor(x / columnWidth);
+  const yIndex = Math.floor(y / rowHeight);
+  return { xIndex, yIndex };
 };
 
 const Tasks = ({ dateRange }) => {
@@ -48,14 +46,35 @@ const Tasks = ({ dateRange }) => {
   const tasks = tasksState.state.concat();
   const dispatch = tasksState.dispatch;
 
+  const [mousePoint, mousePointDispatch] = useState({ xIndex: -1, yIndex: -1 });
+
   const range = states.range;
 
   return (
     <TasksContainer>
       <TasksInner
         style={{ width: dateRange.length * range.state.columnWidth }}
-        onMouseMove={handleMouseMove}
+        onMouseMove={e => {
+          const currentMousePoint = calcIndexFromMousePosition(
+            e.clientX,
+            e.clientY - 110,
+            range.state.columnWidth,
+            range.state.rowHeight
+          );
+          mousePointDispatch(currentMousePoint);
+        }}
       >
+        <TaskCreater
+          xIndex={mousePoint.xIndex}
+          yIndex={mousePoint.yIndex}
+          onCreate={({ xIndex, period }) => {
+            console.log(xIndex, period);
+            // dispatch({
+            //   type: "create",
+            //   value: value
+            // });
+          }}
+        />
         {tasks.map((task, i) => {
           const { id, endAt, position, startAt, title, isFinished } = task;
           const startIndex = dateRange.findIndex(date => {
@@ -91,7 +110,6 @@ const Tasks = ({ dateRange }) => {
             />
           );
         })}
-        <TaskCreater />
       </TasksInner>
     </TasksContainer>
   );
@@ -182,16 +200,6 @@ const Task = ({
       </ResizableContainer>
     </DraggableContainer>
   );
-};
-
-const CreaterContainer = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-`;
-
-const TaskCreater = () => {
-  return <CreaterContainer />;
 };
 
 export default Tasks;
