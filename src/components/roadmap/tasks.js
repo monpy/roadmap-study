@@ -68,7 +68,7 @@ const Tasks = ({ dateRange }) => {
         <TaskCreater
           xIndex={mousePoint.xIndex}
           yIndex={mousePoint.yIndex}
-          onCreate={({ xIndex, period, yIndex }) => {
+          onCreate={({ xIndex, period, yIndex, title }) => {
             dispatch({
               type: "create",
               value: {
@@ -76,7 +76,7 @@ const Tasks = ({ dateRange }) => {
                 endAt: dateRange[xIndex + period],
                 position: yIndex,
                 isFinished: false,
-                title: "new task created!"
+                title: title
               }
             });
           }}

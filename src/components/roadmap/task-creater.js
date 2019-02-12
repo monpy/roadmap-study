@@ -2,6 +2,9 @@ import React, { useContext, useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { Store } from "../../states/project";
 import Resizable from "re-resizable";
+import Modal from "@material-ui/core/Modal";
+import { withStyles } from "@material-ui/core/styles";
+import Input from "@material-ui/core/Input";
 
 const CreaterContainer = styled(Resizable)`
   box-sizing: border-box;
@@ -35,6 +38,8 @@ const TaskCreater = ({ xIndex, yIndex, onCreate = () => {} }) => {
   const y = creating ? startPosition.yIndex : yIndex;
   const cssTranslate = `translate(${x * range.state.columnWidth}px, ${y *
     range.state.rowHeight}px)`;
+
+  const [showModal, updateShowModal] = useState(false);
 
   useEffect(() => {
     // console.log(startPosition);
@@ -93,15 +98,90 @@ const TaskCreater = ({ xIndex, yIndex, onCreate = () => {} }) => {
       }}
       onResizeStop={(e, dir, el, d) => {
         e.stopPropagation();
-        const period = d.width / range.state.columnWidth;
-        onCreate({ xIndex: startPosition.xIndex - slideLeft, period: period, yIndex: startPosition.yIndex });
-        updateCreating(false);
-        updatePeriod(1);
-        updateSlideLeft(0);
+        updatePeriod(d.width / range.state.columnWidth + 1);
+        updateShowModal(true);
       }}
     >
       <Inner />
+      <ModalTaskTitleInputer
+        onClose={({ cancel, value }) => {
+          if (!cancel && value) {
+            onCreate({
+              xIndex: startPosition.xIndex - slideLeft,
+              period: period,
+              yIndex: startPosition.yIndex,
+              title: value
+            });
+          }
+          updateCreating(false);
+          updateShowModal(false);
+          updatePeriod(1);
+          updateSlideLeft(0);
+        }}
+        show={showModal}
+      />
     </CreaterContainer>
+  );
+};
+
+const MocalContaier = styled.div`
+  position: absolute;
+  right: 50%;
+  bottom: 50%;
+  transform: translate(50%, 50%);
+  padding: 8px;
+  border-radius: 12px;
+  background-color: #fff;
+  max-width: 800px;
+  width: 80%;
+`;
+
+const ModalContent = styled.div`
+  padding: 20px;
+`;
+
+const ModalTaskTitleInputer = ({ show, inputEnter, onClose }) => {
+  const [isShow, updateIsShow] = useState(show);
+
+  useEffect(() => {
+    updateIsShow(show);
+  }, [show]);
+
+  return (
+    <Modal
+      open={isShow}
+      onClose={() => {
+        updateIsShow(false);
+        onClose({ cancel: true });
+      }}
+    >
+      <MocalContaier>
+        <ModalContent>
+          <h2
+            style={{
+              fontFamily: "Inter-UI-Regular, Arial, Roboto, sans-serif"
+            }}
+          >
+            Create Task
+          </h2>
+          <Input
+            autoFocus={true}
+            fullWidth={true}
+            placeholder="Type task name"
+            onKeyPress={e => {
+              console.log(e.key);
+              if (e.key === "Enter") {
+                updateIsShow(false);
+                onClose({
+                  cancel: false,
+                  value: e.target.value
+                });
+              }
+            }}
+          />
+        </ModalContent>
+      </MocalContaier>
+    </Modal>
   );
 };
 

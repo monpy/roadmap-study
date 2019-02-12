@@ -28,7 +28,7 @@ const Container = styled.div`
 const Table = props => {
   const today = new Date();
   const leftWindow = -30;
-  const rightWindow = 30;
+  const rightWindow = 60;
   const dateRange = getDatesFromRange(
     getDateFromToday(leftWindow),
     getDateFromToday(rightWindow)
