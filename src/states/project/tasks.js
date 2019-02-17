@@ -2,6 +2,7 @@ import moment from "moment";
 const uuidv4 = require("uuid/v4");
 
 export const reducer = (state = [{}], action) => {
+  console.log(action);
   switch (action.type) {
     case "create":
       return createTask(state, action);
@@ -25,7 +26,7 @@ const updateTask = (state, { id, value }) => {
 };
 
 const createTask = (state, { value }) => {
-  return state.concat(Object.assign({}, {id:  uuidv4()}, value));
+  return state.concat(Object.assign({}, { id: uuidv4() }, value));
 };
 
 export const initialState = [
@@ -37,7 +38,8 @@ export const initialState = [
       .toDate(),
     title: "Task Example",
     position: 0,
-    isFinished: false
+    isFinished: false,
+    willSpentHour: 30
   },
   {
     id: uuidv4(),
@@ -47,6 +49,7 @@ export const initialState = [
       .toDate(),
     title: "Task Example",
     position: 1,
-    isFinished: false
+    isFinished: false,
+    willSpentHour: 0
   }
 ];

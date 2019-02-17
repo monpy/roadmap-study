@@ -6,6 +6,7 @@ import Avatar from "./avatar";
 import ResizableContainer from "./task-resizable-container.js";
 import DraggableContainer from "./task-draggable-container.js";
 import TaskCreater from "./task-creater";
+import TaskEditor from "./task-editor";
 
 const TasksContainer = styled.div`
   box-sizing: border-box;
@@ -48,11 +49,27 @@ const Tasks = ({ dateRange }) => {
   const dispatch = tasksState.dispatch;
 
   const [mousePoint, mousePointDispatch] = useState({ xIndex: -1, yIndex: -1 });
-
   const range = states.range;
+
+  const [edittedTask, updateEdittedTask] = useState(null);
+  const [isTaskEditorShow, udpateIsTaskEditorShow] = useState(false);
 
   return (
     <TasksContainer ref={containerEl}>
+      <TaskEditor
+        task={edittedTask}
+        show={isTaskEditorShow}
+        onClose={({ cancel, value }) => {
+          updateEdittedTask(null);
+          udpateIsTaskEditorShow(false);
+          if (cancel) return;
+          dispatch({
+            type: "update",
+            id: value.id,
+            value: value
+          });
+        }}
+      />
       <TasksInner
         style={{ width: dateRange.length * range.state.columnWidth }}
         onMouseMove={e => {
@@ -112,6 +129,11 @@ const Tasks = ({ dateRange }) => {
                     dateRange
                   )
                 });
+              }}
+              onClicked={() => {
+                console.log("aaa");
+                updateEdittedTask(task);
+                udpateIsTaskEditorShow(true);
               }}
             />
           );
@@ -179,9 +201,13 @@ const Task = ({
   asignee,
   title,
   onResized,
-  onDragged
+  onDragged,
+  onClicked
 }) => {
   const diff = moment(endAt).diff(startAt, "day");
+
+  const [mouseDownAt, udpateMouseDownAt] = useState(new Date());
+
   return (
     <DraggableContainer
       onDragged={onDragged}
@@ -195,7 +221,14 @@ const Task = ({
         yIndex={rowIndex}
         period={diff}
       >
-        <TaskContainer>
+        <TaskContainer
+          onMouseDown={() => {
+            udpateMouseDownAt(new Date().getTime());
+          }}
+          onMouseUp={() => {
+            if (new Date().getTime() - mouseDownAt < 300) return onClicked();
+          }}
+        >
           <TaskInner>
             <Wrap style={{ paddingLeft: 8, overflow: "hidden" }}>
               <Avatar />
