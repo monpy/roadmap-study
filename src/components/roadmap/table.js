@@ -34,6 +34,8 @@ const Table = props => {
     getDateFromToday(rightWindow)
   );
 
+  const firstTimeScrollIncex = 30;
+
   return (
     <Container>
       <ScrollSync>
@@ -42,7 +44,10 @@ const Table = props => {
             <Grids dateRange={dateRange} />
           </ScrollSyncPane>
           <ScrollSyncPane>
-            <Tasks dateRange={dateRange} />
+            <Tasks
+              dateRange={dateRange}
+              firstTimeScrollIncex={firstTimeScrollIncex}
+            />
           </ScrollSyncPane>
         </aside>
       </ScrollSync>

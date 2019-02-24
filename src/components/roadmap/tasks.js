@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { Store } from "../../states/project";
 import moment from "moment";
@@ -41,7 +41,7 @@ const calcIndexFromMousePosition = (x, y, columnWidth, rowHeight) => {
   return { xIndex, yIndex };
 };
 
-const Tasks = ({ dateRange }) => {
+const Tasks = ({ dateRange, firstTimeScrollIncex }) => {
   const containerEl = useRef(null);
   const states = useContext(Store);
   const tasksState = states.tasks;
@@ -53,6 +53,13 @@ const Tasks = ({ dateRange }) => {
 
   const [edittedTask, updateEdittedTask] = useState(null);
   const [isTaskEditorShow, udpateIsTaskEditorShow] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      containerEl.current.scrollLeft =
+        firstTimeScrollIncex * range.state.columnWidth;
+    });
+  }, [firstTimeScrollIncex]);
 
   return (
     <TasksContainer ref={containerEl}>
