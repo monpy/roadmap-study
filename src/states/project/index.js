@@ -29,7 +29,7 @@ const Provider = ({ children }) => {
       state: rangeState[0],
       dispatch: rangeState[1]
     },
-    groupsState: {
+    groups: {
       state: groupsState[0],
       dispatch: groupsState[1]
     }

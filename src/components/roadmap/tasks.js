@@ -7,6 +7,7 @@ import ResizableContainer from "./task-resizable-container.js";
 import DraggableContainer from "./task-draggable-container.js";
 import TaskCreater from "./task-creater";
 import TaskEditor from "./task-editor";
+import TaskGroupLines from "./task-group-lines";
 
 const TasksContainer = styled.div`
   box-sizing: border-box;
@@ -77,6 +78,7 @@ const Tasks = ({ dateRange, firstTimeScrollIncex }) => {
           });
         }}
       />
+      <TaskGroupLines width={dateRange.length * range.state.columnWidth} />
       <TasksInner
         style={{ width: dateRange.length * range.state.columnWidth }}
         onMouseMove={e => {

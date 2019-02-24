@@ -2,7 +2,6 @@ import moment from "moment";
 const uuidv4 = require("uuid/v4");
 
 export const reducer = (state = [{}], action) => {
-  console.log(action);
   switch (action.type) {
     case "create":
       return createTask(state, action);

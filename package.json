@@ -6,7 +6,7 @@
   "scripts": {
     "build": "parcel build index.html",
     "start": "parcel index.html",
-    "deploy": "npm run build && now ./dist",
+    "deploy": "npm run build && now ./dist -n roadmap-stydy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
